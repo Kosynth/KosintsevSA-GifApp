@@ -13,10 +13,10 @@ interface ApiSvc {
     fun getLatestPage():Call<PageResult<MainPaneItem>>
 
     @GET("/hot/0?json=true")
-    fun getHotPage():Call<MainPaneItem>
+    fun getHotPage():Call<PageResult<MainPaneItem>>
 
     @GET("/top/0?json=true")
-    fun getTopPage():Call<MainPaneItem>
+    fun getTopPage():Call<PageResult<MainPaneItem>>
 
 
 }

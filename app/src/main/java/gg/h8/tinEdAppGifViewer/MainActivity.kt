@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("ButtonPress", "Hot Button is pressed")
                 page="hot";
                 cls()
+                mainList.requestNewHotPage(1,mainPaneAdapter)
 
             }
             if (it.id == R.id.latestButton){
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("ButtonPress", "Best Button is pressed")
                 page="best"
                 cls()
+                mainList.requestNewBestPage(1,mainPaneAdapter)
             }
         }
         recyclerView.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {

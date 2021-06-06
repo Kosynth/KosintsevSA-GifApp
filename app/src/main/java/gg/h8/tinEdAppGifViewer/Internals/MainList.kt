@@ -59,5 +59,51 @@ class MainList: ArrayList<MainPaneItem>() {
         Log.d("List", "${list.size}")
         return list
     }
+    fun requestNewBestPage(quantity:Int=1, m: MainPaneAdapter): ArrayList<MainPaneItem> {
+        list.clear()
+        val retrofit= Retrofit.Builder().baseUrl("https://developerslife.ru").addConverterFactory(
+            GsonConverterFactory.create()).build()
+        for (i in 1..quantity) {
+            val api=retrofit.create(ApiSvc::class.java)
+            api.getTopPage().enqueue(object: Callback<PageResult<MainPaneItem>> {
+                override fun onResponse(call: Call<PageResult<MainPaneItem>>, response: Response<PageResult<MainPaneItem>>) {
+                    response.body()?.let { m.itemSet.addAll(it.result)
+                        m.notifyDataSetChanged() }
+                    Log.d("List", "${list.size}")
+                    Log.d("getter", "onResponse:}")
+                }
+
+                override fun onFailure(call: Call<PageResult<MainPaneItem>>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+        }
+        Log.d("List", "${list.size}")
+        return list
+    }
+    fun requestNewHotPage(quantity:Int=1, m: MainPaneAdapter): ArrayList<MainPaneItem> {
+        list.clear()
+        val retrofit= Retrofit.Builder().baseUrl("https://developerslife.ru").addConverterFactory(
+            GsonConverterFactory.create()).build()
+        for (i in 1..quantity) {
+            val api=retrofit.create(ApiSvc::class.java)
+            api.getHotPage().enqueue(object: Callback<PageResult<MainPaneItem>> {
+                override fun onResponse(call: Call<PageResult<MainPaneItem>>, response: Response<PageResult<MainPaneItem>>) {
+                    response.body()?.let { m.itemSet.addAll(it.result)
+                        m.notifyDataSetChanged() }
+                    Log.d("List", "${list.size}")
+                    Log.d("getter", "onResponse:}")
+                }
+
+                override fun onFailure(call: Call<PageResult<MainPaneItem>>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+        }
+        Log.d("List", "${list.size}")
+        return list
+    }
 
 }
