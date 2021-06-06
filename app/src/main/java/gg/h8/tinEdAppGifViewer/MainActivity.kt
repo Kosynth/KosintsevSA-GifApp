@@ -21,10 +21,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var nextButton: Button
     private lateinit var backButton: Button
+    private lateinit var hotButton: Button
+    private lateinit var latestButton: Button
+    private lateinit var bestButton: Button
     private val snapHelper: SnapHelper = PagerSnapHelper()
     val mainList=MainList()
     val mainPaneAdapter=MainPaneAdapter()
     var pos = 0
+    var page="random"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +38,12 @@ class MainActivity : AppCompatActivity() {
         recyclerView=findViewById<RecyclerView>(R.id.main_pane_recycler)
         snapHelper.attachToRecyclerView(recyclerView)
         mainList.requestNew(5,mainPaneAdapter)
+
         nextButton = findViewById(R.id.nextButton)
         backButton= findViewById(R.id.backButton)
+        hotButton= findViewById(R.id.hotButton)
+        latestButton= findViewById(R.id.latestButton)
+        bestButton= findViewById(R.id.bestButton)
         val clickListener: View.OnClickListener = View.OnClickListener {
             if (it.id == R.id.nextButton){
                 Log.d("ButtonPress", "Next Button is pressed")
@@ -44,7 +52,23 @@ class MainActivity : AppCompatActivity() {
             else if (it.id == R.id.backButton){
                 goBack()
                 Log.d("ButtonPress", "Back Button is pressed")
-                //goBack()
+            }
+            if (it.id == R.id.hotButton){
+                Log.d("ButtonPress", "Hot Button is pressed")
+                page="hot";
+                cls()
+
+            }
+            if (it.id == R.id.latestButton){
+                Log.d("ButtonPress", "latest latest is pressed")
+                page="latest"
+                cls()
+                mainList.requestNewLatestPage(1,mainPaneAdapter)
+            }
+            if (it.id == R.id.bestButton){
+                Log.d("ButtonPress", "Best Button is pressed")
+                page="best"
+                cls()
             }
         }
         recyclerView.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
@@ -54,23 +78,22 @@ class MainActivity : AppCompatActivity() {
         })
         nextButton.setOnClickListener(clickListener)
         backButton.setOnClickListener(clickListener)
+        hotButton.setOnClickListener(clickListener)
+        bestButton.setOnClickListener(clickListener)
+        latestButton.setOnClickListener(clickListener)
         var an=ObjectAnimator.ofFloat(backButton, "translationY", 1000f,)
         an.duration = 2000
         an.start();
 
     }
 
-    override fun onResume() {
-        super.onResume()
-
-
-    }
-
     private fun getNext(quantity:Int=1){
-        mainList.requestNew(quantity,mainPaneAdapter)
+        val lastVisibleItemIndex: Int = linearLayoutManager.findLastVisibleItemPosition()
+        if (lastVisibleItemIndex-5 < recyclerView.adapter!!.itemCount){
+            mainList.requestNew(quantity,mainPaneAdapter)
+        }
         val totalItemCount = recyclerView.adapter!!.itemCount
         if (totalItemCount <= 0) return
-        val lastVisibleItemIndex: Int = linearLayoutManager.findLastVisibleItemPosition()
         if (lastVisibleItemIndex >= totalItemCount) return
         linearLayoutManager.smoothScrollToPosition(recyclerView, null, lastVisibleItemIndex)
         if (lastVisibleItemIndex>0){
@@ -99,6 +122,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         }
+    private fun cls(){
+        var ic=recyclerView.adapter!!.itemCount
+        mainPaneAdapter.itemSet.clear()
+        mainPaneAdapter.notifyItemRangeRemoved(0,ic)
+    }
 
 
 }

@@ -53,7 +53,4 @@ lateinit var itemSet:ArrayList<MainPaneItem>
 
   }
  }
-
- fun commitList(paneList: ArrayList<MainPaneItem>){
- }
 }
